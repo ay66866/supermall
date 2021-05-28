@@ -1,11 +1,13 @@
 <template>
   <div id="app">
-    <main-tar-bar/>
+    <router-view></router-view>
+    <main-tar-bar></main-tar-bar>
   </div>
 </template>
 
 <script>
-  import MainTarBar from 'components/content/maintarbar/MainTarBar.vue'
+  // import MainTarBar from '../../components/content/maintarbar/MainTarBar.vue'
+  import MainTarBar from '../src/components/content/maintarbar/MainTarBar'
 
   export default {
     name: "app",
