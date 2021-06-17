@@ -1,6 +1,7 @@
-import {request} from "./request";
+import {request} from "./request.js";
+
 export function getHomeMultidata() {
     return request({
-        url: '/home/multidata'
+        url: 'home/multidata'
     })
 }
