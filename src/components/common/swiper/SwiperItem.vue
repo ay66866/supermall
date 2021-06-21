@@ -10,8 +10,8 @@
 	}
 </script>
 
-<style scoped>
-  .slide {
+<style>
+  .slide { 
     width: 100%;
     flex-shrink: 0;
   }
