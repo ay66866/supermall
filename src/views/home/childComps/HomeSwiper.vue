@@ -6,7 +6,7 @@
           </a>
         </swiper-item>
       </swiper>
-</template>
+</template>  
 
 <script>
 import { Swiper, SwiperItem } from "components/common/swiper";  
