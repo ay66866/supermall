@@ -1,78 +1,141 @@
 <template>
   <div id="home">
+
     <nav-bar class="home-nav">
       <template v-slot:center>购物街</template>
     </nav-bar>
-    <home-swiper :banners="banners" />
-    <recommend-view :recommends="recommends" />
-    <feature-view />
-    <tab-control class="tab-control" :titles="['流行', '新款', '精选']" @tabClick="tabClick"/>
-    <goods-list :goods="goods[currentType].list" />
+
+    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
+      <home-swiper :banners="banners" />
+      <recommend-view :recommends="recommends" />
+      <feature-view />
+      <tab-control
+        class="tab-control"
+        :titles="['流行', '新款', '精选']"
+        @tabClick="tabClick" />
+      <goods-list :goods="goods[currentType].list" />    
+    </scroll>
+
+    <back-top @click="backClick" v-show="isShowBackTop"/>
     <!-- <ul>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
+        <li>1</li>
+        <li>2</li>
+        <li>1</li>
+        <li>1</li>
+        <li>1</li>
+        <li>1</li>
+        <li>1</li>
+        <li>1</li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
     </ul> -->
   </div>
+
 </template>
 
 <script>
 import NavBar from "components/common/navbar/NavBar.vue";
 import TabControl from "components/content/tabControl/TabControl";
-import GoodsList from 'components/content/goods/GoodsList.vue';
-
+import GoodsList from "components/content/goods/GoodsList.vue";
+import Scroll from "components/common/scroll/Scroll.vue";
+import BackTop from "components/content/backTop/BackTop";
+ 
 import HomeSwiper from "./childComps/HomeSwiper";
 import RecommendView from "./childComps/RecommendView.vue";
 import FeatureView from "./childComps/FeatureView.vue";
 
 import { getHomeMultidata, getHomeGoods } from "../../network/home";
+
 
 // import Swiper from '../../components/common/swiper/Swiper.vue';
 // import SwiperItem from '../../components/common/swiper/SwiperItem.vue'
@@ -86,6 +149,8 @@ export default {
     RecommendView,
     FeatureView,
     GoodsList,
+    Scroll,
+    BackTop,
   },
   data() {
     return {
@@ -96,67 +161,88 @@ export default {
         new: { page: 0, list: [] },
         sell: { page: 0, list: [] },
       },
-      currentType: 'pop'
+      currentType: "pop",
+      isShowBackTop: false,
     };
   },
   created() {
-    this.getHomeMultidata()
-    
-    this.getHomeGoods('pop')
-    this.getHomeGoods('new')
-    this.getHomeGoods('sell')
+    this.getHomeMultidata();
+
+    this.getHomeGoods("pop");
+    this.getHomeGoods("new");
+    this.getHomeGoods("sell");
   },
   methods: {
     // 时间监听
     tabClick(index) {
-      switch(index) {
+      switch (index) {
         case 0:
-          this.currentType = "pop"
-          break
+          this.currentType = "pop";
+          break;
         case 1:
-          this.currentType = "new"
-          break
+          this.currentType = "new";
+          break;
         case 2:
-          this.currentType = "sell"
-          break
+          this.currentType = "sell";
+          break;
       }
     },
-
-    //网络请求相关
-    getHomeMultidata(){
-      getHomeMultidata().then(res => {
-      this.banners = res.data.banner.list;
-      this.recommends = res.data.recommend.list;
-      })
+    backClick() {
+      this.$refs.scroll.scrollTo(0,0)
     },
-    getHomeGoods(type){
-      const page = this.goods[type].page + 1
-      getHomeGoods(type, page).then(res => {
-        this.goods[type].list.push(...res.data.list)
-      })
-    }
-  }
+    contentScroll(postion) {
+      console.log(postion);
+      this.isShowBackTop = -postion.y > 1000
+    },
+    //网络请求相关
+    getHomeMultidata() {
+      getHomeMultidata().then((res) => {
+        this.banners = res.data.banner.list;
+        this.recommends = res.data.recommend.list;
+      });
+    },
+    getHomeGoods(type) {
+      const page = this.goods[type].page + 1;
+      getHomeGoods(type, page).then((res) => {
+        this.goods[type].list.push(...res.data.list);
+      });
+    },
+  },
 };
 </script>
 
 
-<style>
+<style scoped>
 #home {
-  padding-top: 44px;
+  position: relative;
+  /* padding-top: 44px; */
+  height: 100vh;
 }
 .home-nav {
   background-color: var(--color-tint);
   color: #fff;
-
   position: fixed;
   left: 0;
   right: 0;
   top: 0;
-  z-index: 100;
+  z-index: 9;
 }
 .tab-control {
   position: sticky;
   top: 44px;
-  z-index: 100;
+  z-index: 9
 }
+.content {
+  overflow: hidden;
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  right: 0;
+  left: 0;
+}
+/* .content {         
+  height: calc(100% - 93px);
+  overflow: hidden;
+  margin-top: 44px;
+} */
 </style>
