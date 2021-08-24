@@ -9,7 +9,10 @@
 <script>
 import BScroll from "better-scroll";
 import ObserveDom from "@better-scroll/observe-dom"
+import Pullup from "@better-scroll/pull-up"
+
 BScroll.use(ObserveDom)
+BScroll.use(Pullup)
 
 
 export default {
@@ -18,6 +21,9 @@ export default {
     probeType: {
       type: Number,
       default: 0,
+    },
+    pullUpLoad: {
+      type: Boolean,
     }
   },
   data() {
@@ -30,17 +36,27 @@ export default {
     this.scroll = new BScroll(this.$refs.wrapper, {
       click: true,
       observeDOM: true,
-      probeType: this.probeType
+      observeImage: true,
+      probeType: this.probeType,
+      pullUpLoad: this.pullUpLoad
     }),
       // this.scroll.scrollTo(0, 0);
       this.scroll.on('scroll', (postion) => {
         this.$emit('scroll', postion)
+      })
+      this.scroll.on('pullingUp', () => {
+        this.$emit('pullingUp')
+        // this.scroll.refresh();
+        this.scroll.finishPullUp();
       })
   },
   methods: {
     scrollTo(x, y, time = 300) {
       this.scroll.scrollTo(x, y, time);
     },
+    finishPullUp() {
+      this.scroll.finishPullUp()
+    }
   },
 };
 </script>
