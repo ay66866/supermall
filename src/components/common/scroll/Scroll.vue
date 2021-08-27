@@ -24,8 +24,10 @@ export default {
     },
     pullUpLoad: {
       type: Boolean,
-    }
+      default: false
+    },
   },
+  
   data() {
     return {
       scroll: null,
@@ -36,18 +38,18 @@ export default {
     this.scroll = new BScroll(this.$refs.wrapper, {
       click: true,
       observeDOM: true,
-      observeImage: true,
+      observeImage: true,                                                                                                                                                                                                     
       probeType: this.probeType,
       pullUpLoad: this.pullUpLoad
     }),
+    // 2.监听滚动对象
       // this.scroll.scrollTo(0, 0);
       this.scroll.on('scroll', (postion) => {
         this.$emit('scroll', postion)
       })
-      this.scroll.on('pullingUp', () => {
+      // 3.监听上拉事件
+      this.scroll.on('pullingUp', ()=>{
         this.$emit('pullingUp')
-        // this.scroll.refresh();
-        this.scroll.finishPullUp();
       })
   },
   methods: {

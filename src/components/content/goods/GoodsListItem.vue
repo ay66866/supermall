@@ -9,7 +9,9 @@
   </div>
 </template>
 
+
 <script>
+
 export default {
   name: "GoodsListItem",
   props: {
@@ -20,6 +22,8 @@ export default {
       },
     },
   },
+  methods: {
+  }
 };
 </script>
 

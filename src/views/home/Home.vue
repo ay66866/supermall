@@ -10,6 +10,7 @@
       :probe-type="3"
       @scroll="contentScroll"
       :pull-up-load="true"
+      @pullingUp="loadMore"
     >
       <home-swiper :banners="banners" />
       <recommend-view :recommends="recommends" />
@@ -52,6 +53,7 @@ export default {
     GoodsList,
     Scroll,
     BackTop,
+    
   },
   data() {
     return {
@@ -67,11 +69,21 @@ export default {
     };
   },
   created() {
+    // 1.请求多个数据
     this.getHomeMultidata();
+
+    // 2.请求商品数据
     this.getHomeGoods("pop");
     this.getHomeGoods("new");
     this.getHomeGoods("sell");
+    
   },
+//   mounted() {
+//  // 3.监听item中图片加载完成
+//     Bus.$on('itemImageLoad', () => {
+//       this.$refs.scroll.scroll.refresh()
+//     })
+//   },
   methods: {
     // 时间监听
     tabClick(index) {
@@ -99,6 +111,9 @@ export default {
       // console.log(postion);
       this.isShowBackTop = -postion.y > 1000;
     },
+    loadMore() {
+      this.getHomeGoods(this.currentType)
+    },
     //网络请求相关
     getHomeMultidata() {
       getHomeMultidata().then((res) => {
@@ -108,9 +123,11 @@ export default {
     },
     getHomeGoods(type) {
       const page = this.goods[type].page + 1;
-      getHomeGoods(type, page).then((res) => {
+      getHomeGoods(type, page).then(res => {
         this.goods[type].list.push(...res.data.list);
-        this.goods[type].page+=1
+        this.goods[type].page+=1;
+
+        this.$refs.scroll.finishPullUp()
       });
     },
   },
