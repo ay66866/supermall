@@ -12,13 +12,14 @@
       :pull-up-load="true"
       @pullingUp="loadMore"
     >
-      <home-swiper :banners="banners" />
+      <home-swiper :banners="banners" @swiperImageLoad="swiperImageLoad" />
       <recommend-view :recommends="recommends" />
       <feature-view />
       <tab-control
         class="tab-control"
-        :titles="['流行', '新款', '精选']"
+        :titles="['流行', '新款', '精选']"    
         @tabClick="tabClick"
+        ref="tabControl"
       />
       <goods-list :goods="goods[currentType].list" />
     </scroll>
@@ -66,6 +67,7 @@ export default {
       },
       currentType: "pop",
       isShowBackTop: false,
+      tabOffsetTop: 0
     };
   },
   created() {
@@ -114,6 +116,9 @@ export default {
     loadMore() {
       this.getHomeGoods(this.currentType)
     },
+    swiperImageLoad() {
+      this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
+    },
     //网络请求相关
     getHomeMultidata() {
       getHomeMultidata().then((res) => {
@@ -150,11 +155,11 @@ export default {
   top: 0;
   z-index: 9;
 }
-.tab-control {
+/* .tab-control {
   position: sticky;
   top: 44px;
   z-index: 9;
-}
+} */
 .content {
   overflow: hidden;
   position: absolute;
