@@ -41,7 +41,9 @@ export default {
       observeImage: {debounceTime: 300},                                                                                                                                                                                                
       probeType: this.probeType,  
       pullUpLoad: this.pullUpLoad,    
-      momentum: true
+      // momentum: true,
+      deceleration: 0.001
+
     }),
     // 2.监听滚动对象
       // this.scroll.scrollTo(0, 0);
@@ -61,7 +63,13 @@ export default {
     },
     finishPullUp() {
       this.scroll.finishPullUp()
-    }
+    },
+    refresh() {
+      this.scroll && this.scroll.refresh()
+    },
+    getScrollY() {
+      return this.scroll ? this.scroll.y : 0 
+    },
   },
 };
 </script>

@@ -3,7 +3,13 @@
     <nav-bar class="home-nav">
       <template v-slot:center>购物街</template> 
     </nav-bar>
-
+    <tab-control     
+      :titles="['流行', '新款', '精选']"    
+      @tabClick="tabClick"
+      ref="tabControl1"
+      class="tab-control"
+      v-show="isTabFixed"
+    />
     <scroll
       class="content"
       ref="scroll"
@@ -16,10 +22,9 @@
       <recommend-view :recommends="recommends" />
       <feature-view />
       <tab-control
-        class="tab-control"
         :titles="['流行', '新款', '精选']"    
         @tabClick="tabClick"
-        ref="tabControl"
+        ref="tabControl2"
       />
       <goods-list :goods="goods[currentType].list" />
     </scroll>
@@ -67,9 +72,19 @@ export default {
       },
       currentType: "pop",
       isShowBackTop: false,
-      tabOffsetTop: 0
+      tabOffsetTop: 0,
+      isTabFixed: false,
+      saveY: 0
     };
   },
+    activated() {
+      this.$refs.scroll.refresh()
+      this.$refs.scroll.scrollTo(0, this.saveY, 0)
+      
+    },
+    deactivated() {
+      this.saveY = this.$refs.scroll.getScrollY()
+    },
   created() {
     // 1.请求多个数据
     this.getHomeMultidata();
@@ -100,6 +115,8 @@ export default {
           this.currentType = "sell";
           break;
       }
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
     },
     backClick() {
       this.$refs.scroll.scrollTo(0, 0);
@@ -111,13 +128,16 @@ export default {
     },
     contentScroll(postion) {
       // console.log(postion);
-      this.isShowBackTop = -postion.y > 1000;
+      // 1.判断BackTop
+      this.isShowBackTop = -postion.y > 1000; 
+      //2.判断tabControl是否吸顶
+      this.isTabFixed = (-postion.y) > this.tabOffsetTop
     },
     loadMore() {
       this.getHomeGoods(this.currentType)
     },
     swiperImageLoad() {
-      this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
+      this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
     },
     //网络请求相关
     getHomeMultidata() {
@@ -131,7 +151,6 @@ export default {
       getHomeGoods(type, page).then(res => {
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page+=1;
-
         this.$refs.scroll.finishPullUp()
       });
     },
@@ -149,11 +168,11 @@ export default {
 .home-nav {
   background-color: var(--color-tint);
   color: #fff;
-  position: fixed;
+  /* position: fixed;
   left: 0;
   right: 0;
   top: 0;
-  z-index: 9;
+  z-index: 9; */
 }
 /* .tab-control {
   position: sticky;
@@ -168,6 +187,16 @@ export default {
   right: 0;
   left: 0;
 }
+.tab-control {
+  position: relative;
+  z-index: 9;
+}
+/* .fixed {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 44px;
+} */
 /* .content {         
   height: calc(100% - 93px);
   overflow: hidden;
