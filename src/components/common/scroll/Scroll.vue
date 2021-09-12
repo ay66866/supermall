@@ -38,9 +38,10 @@ export default {
     this.scroll = new BScroll(this.$refs.wrapper, {
       click: true,
       observeDOM: true,
+      // observeImage: true,
       observeImage: {debounceTime: 300},                                                                                                                                                                                                
       probeType: this.probeType,  
-      pullUpLoad: this.pullUpLoad,    
+      pullUpLoad: true,    
       // momentum: true,
       deceleration: 0.001
 

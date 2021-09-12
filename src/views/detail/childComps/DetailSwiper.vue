@@ -26,7 +26,7 @@ export default {
   }
 };
 </script>
-<style >
+<style scpoed>
 .detail-swiper {
   height: 300px;
   overflow: hidden;

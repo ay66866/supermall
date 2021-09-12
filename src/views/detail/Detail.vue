@@ -1,27 +1,45 @@
 <!--  -->
 <template>
   <div id="detail">
-    <detail-nav-bar/>
-    <detail-swiper  :top-images="topImages" />
+    <detail-nav-bar class="detail-nav"/>
+    <scroll class="content">
+      <detail-swiper  :top-images="topImages" />
+      <detail-base-info :goods="goods"/>
+      <detail-shop-info :shop="shop"/>
+      <detail-goods-info :detail-info="detailInfo"/>
+    </scroll>
   </div>
 </template>
 
 <script>
 import DetailNavBar from './childComps/DetailNavBar.vue'
 import DetailSwiper from './childComps/DetailSwiper.vue'
+import DetailBaseInfo from './childComps/DetailBaseInfo.vue'
+import DetailShopInfo from './childComps/DetailShopInfo.vue'
+import DetailGoodsInfo from './childComps/DetailGoodsInfo'
 
-import {getDetail} from '../../network/detail'
+import Scroll from 'components/common/scroll/Scroll'
+
+import {getDetail, Goods, Shop} from '../../network/detail'
+
 
 export default {
   name: 'Detail',
   components: {
     DetailNavBar,
-    DetailSwiper
+    DetailSwiper,
+    DetailBaseInfo,
+    DetailShopInfo,
+    DetailGoodsInfo,
+    Scroll,
   },
   data() {
     return {
       iid:null,
-      topImages: []
+      topImages: [],
+      goods: {},
+      shop: {},
+      detailInfo: {}
     }
   },
   created() {
@@ -30,11 +48,37 @@ export default {
     
     // 根据iid请求详情数据
     getDetail(this.iid).then(res => {
-      this.topImages = res.result.itemInfo.topImages
+      // 1.根据顶部的图片轮播数据
+      console.log(res);
+      const data = res.result;
+      this.topImages = data.itemInfo.topImages
+
+      // 2.获取商品信息
+      this.goods = new Goods(data.itemInfo, data.columns, data.shopInfo.services)
+
+      // 3.创建店铺信息的对象
+      this.shop = new Shop(data.shopInfo)
+
+      // 4.保存商品的详情数据
+      this.detailInfo = data.detailInfo
     })
   }
 }
 
 </script>
-<style >
+<style scoped>
+#detail {
+  position: relative;
+  z-index: 9;
+  background-color: #fff;
+  height: 100vh;
+}
+.detail-nav {
+  position: relative;
+  z-index: 9;
+  background-color: #fff;
+}
+.content {
+  height: calc(100% - 44px);
+}
 </style>
