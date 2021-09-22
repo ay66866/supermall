@@ -13,7 +13,7 @@
         <tr v-for="(info, index) in paramInfo.infos" :key="index">
             <td class="info-param-key">{{info.key}}</td>
             <td class="param-value">{{info.value}}</td>
-        </tr>
+        </tr> 
     </table>
     <div v-if="paramInfo.image.length !== 0" class="info-img" >
         <img :src="paramInfo.image" alt="">
