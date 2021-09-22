@@ -64,6 +64,7 @@ export default {
 .shop-info {
   padding: 25px 8px;
   border-bottom: 5px solid #f2f5f8;
+  border-top: 5px solid #f2f5f8;
 }
 .shop-top {
   line-height: 45px;
