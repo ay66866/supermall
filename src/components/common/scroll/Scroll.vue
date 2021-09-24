@@ -49,8 +49,8 @@ export default {
     // 2.监听滚动对象
       // this.scroll.scrollTo(0, 0);
     
-      this.scroll.on('scroll', (postion) => {
-        this.$emit('scroll', postion)
+      this.scroll.on('scroll', (position) => {
+        this.$emit('scroll', position)
       })
     
       // 3.监听上拉事件

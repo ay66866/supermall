@@ -1,3 +1,16 @@
+//防抖
+export  function debounce (func, delay=50){ 
+  let timer = null
+  return function (...args){
+    if(timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      func(...args)
+    },delay)
+  }
+}
+
 // 时间戳转化
 export function formatDate(date, fmt) {
     if(/(y+)/.test(fmt)) {
