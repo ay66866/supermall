@@ -37,13 +37,14 @@ import NavBar from "components/common/navbar/NavBar.vue";
 import TabControl from "components/content/tabControl/TabControl";
 import GoodsList from "components/content/goods/GoodsList.vue";
 import Scroll from "components/common/scroll/Scroll.vue";
-import BackTop from "components/content/backTop/BackTop";
+// import BackTop from "components/content/backTop/BackTop";
 
 import HomeSwiper from "./childComps/HomeSwiper";
 import RecommendView from "./childComps/RecommendView.vue";
 import FeatureView from "./childComps/FeatureView.vue";
 
 import { getHomeMultidata, getHomeGoods } from "../../network/home";
+import { backTopMixin } from "../../../common/mixin";
 
 // import Swiper from '../../components/common/swiper/Swiper.vue';
 // import SwiperItem from '../../components/common/swiper/SwiperItem.vue'
@@ -58,9 +59,9 @@ export default {
     FeatureView,
     GoodsList,
     Scroll,
-    BackTop,
-    
+    // BackTop,
   },
+  mixins: [backTopMixin],
   data() {
     return {
       banners: [],
@@ -72,7 +73,7 @@ export default {
       },
       currentType: "pop",
       isShowBackTop: false,
-      tabOffsetTop: 0,
+      // tabOffsetTop: 0,
       isTabFixed: false,
       saveY: 0
     };
@@ -125,12 +126,13 @@ export default {
       this.getHomeGoods(this.currentType);
       this.$refs.scroll.scroll.refresh()
     },
-    contentScroll(postion) {
+    contentScroll(position) {
       // console.log(postion);
       // 1.判断BackTop
-      this.isShowBackTop = -postion.y > 1000; 
+      this.listenShowBackTop(position)
+      // this.isShowBackTop = -position.y > 1000; 
       //2.判断tabControl是否吸顶
-      this.isTabFixed = (-postion.y) > this.tabOffsetTop
+      this.isTabFixed = (-position.y) > this.tabOffsetTop
     },
     loadMore() {
       this.getHomeGoods(this.currentType)
