@@ -8,6 +8,10 @@
       :probe-type="3"
       @scroll="contentScroll"
     >
+      <ul>
+        <li v-for="item in store.state.cartList" :key="item">{{item}}</li>
+      </ul>
+
       <detail-swiper :top-images="topImages" />
       <detail-base-info :goods="goods" />
       <detail-shop-info :shop="shop" />
@@ -39,6 +43,7 @@ import DetailBottomBar from "./childComps/DetailBottombar.vue";
 import Scroll from "components/common/scroll/Scroll";
 import GoodsList from "components/content/goods/GoodsList";
 import { backTopMixin } from "../../../common/mixin";
+import {useStore} from 'vuex'
 // import BackTop from "components/content/backTop/BackTop";
 
 import { debounce } from "../../../common/utils";
@@ -82,6 +87,12 @@ export default {
       // isShowBackTop: false,
     };
   },
+  setup:function(){
+            const store = new useStore();
+            return {
+                store
+            }
+        },
   created() {
     // 保存存入的iid
     this.iid = this.$route.params.iid;
@@ -173,11 +184,11 @@ export default {
       product.image = this.topImages[0];
       product.title = this.goods.title;
       product.desc = this.goods.desc;
-      product.price = this.goods.realPrice
-      product.iid = this.iid
+      product.price = this.goods.realPrice;
+      product.iid = this.iid;
 
       // 2.将商品添加到购物车
-
+      this.store.dispatch("addCart", product);
     },
   },
 };
