@@ -8,10 +8,6 @@
       :probe-type="3"
       @scroll="contentScroll"
     >
-      <ul>
-        <li v-for="item in store.state.cartList" :key="item">{{item}}</li>
-      </ul>
-
       <detail-swiper :top-images="topImages" />
       <detail-base-info :goods="goods" />
       <detail-shop-info :shop="shop" />
@@ -196,7 +192,7 @@ export default {
 <style scoped>
 #detail {
   position: relative;
-  z-index: 1;
+  z-index: 9;
   background-color: #fff;
   height: 100vh;
 }
