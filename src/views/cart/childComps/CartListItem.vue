@@ -4,7 +4,7 @@
       <CheckButton
         @click="checkClick"
         :is-checked="itemInfo.checked"
-      ></CheckButton>
+      />
     </div>
     <div class="item-img">
       <img :src="itemInfo.image" alt="商品图片" />
@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import CheckButton from "components/content/checkButton/checkButton"
+import CheckButton from "components/content/checkButton/CheckButton"
 
 export default {
   name: "CartListItem",
@@ -36,10 +36,16 @@ export default {
       },
     },
   },
+  // data() {
+  //    return {
+  //      infoItem: this.itemInfo
+  //    } 
+  // },
   methods: {
-      checkClick() {
-          this.itemInfo.checked = !this.itemInfo.checked
-      }
+    checkClick() {
+      // eslint-disable-next-line vue/no-mutating-props
+      this.itemInfo.checked = !this.itemInfo.checked
+    }
   }
 };
 </script>

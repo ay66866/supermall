@@ -9,7 +9,7 @@
 
 <script>
 import NavBar from "components/common/navbar/NavBar.vue";
-import CartList from "./childComps/CartList.vue"
+import CartList from "./childComps/CartList";
 
 import { useStore, mapGetters } from "vuex";
 
